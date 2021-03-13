@@ -1,5 +1,5 @@
 import React from "react";
-import { screen, render } from "@testing-library/react";
+import { screen, render, queryByText } from "@testing-library/react";
 import CheckoutForm from "./CheckoutForm";
 import userEvent from "@testing-library/user-event";
 
@@ -14,37 +14,26 @@ test("form header renders", () => {
 });
 
 test("form shows success message on submit with form details", () => {
-    //Arrange
     render(<CheckoutForm />);
 
-    const name = "Bill";
+    const firstNameInput = screen.getByLabelText(/First Name/i);
+    const lastNameInput = screen.getByLabelText(/Last Name/i);
+    const addressInput = screen.getByLabelText(/Address/i);
+    const cityInput = screen.getByLabelText(/City/i);
+    const stateInput = screen.getByLabelText(/State/i);
+    const zipInput= screen.getByLabelText(/Zip/i);
 
-    //Act
-
-    // get firstname input
-    // userEvent.type(screen.getByRole('textbox'), "Bill")
-    // expect(screen.getByRole('textbox')).toHaveValue(/bill/i)
-
-    // const lastName = screen.getByText();
-    // userEvent.type(lastName, "");
-
-    const addressInput = screen.getByLabelText(/Age/i);
-    userEvent.type(addressInput, "3");
-
-    const cityInput = screen.getByLabelText("City");
-    userEvent.type(cityInput, /San Jose/i);
-
-    const stateInput = screen.getByLabelText("State");
-    userEvent.type(stateInput, "CA");
-
-    const zipInput = screen.getByLabelText("zip");
-    userEvent.type(zipInput, "95131");
+    userEvent.type(firstNameInput, 'Bill')
+    userEvent.type(lastNameInput, 'Smith')
+    userEvent.type(addressInput, '123 main st.')
+    userEvent.type(cityInput, 'San Jose')
+    userEvent.type(stateInput, 'CA')
+    userEvent.type(zipInput, '95131')
 
     // find and click submit button
-    const button = screen.getByRole("button");
+    const button = screen.getByRole("button", {name: /Checkout/i});
     userEvent.click(button);
 
-    // Asset
-    const nameText = screen.queryByText(name);
-    expect(nameText).toBeInTheDocument();
+    const plantText = screen.queryByText(/You have ordered some plants!/i);
+    expect(plantText).toBeInTheDocument();
 });
